@@ -14,43 +14,11 @@
                 float:left;
             }
         </style>
+        <script src="jquery.min.js"></script>
         <script src="raphael-min.js"></script>
         <script src="duality.js"></script>
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+        <script src="gui.js"></script>
         <script type="text/javascript">
-            var radius = 3;
-            var height = 500;
-            var width = 500;
-            function add_circle(paper,x,y){
-                // Creates circle at x = 50, y = 40, with radius 10
-                x = x+(width/2.0);
-                y = y+(height/2.0);
-                var circle = paper.circle(x, y, radius);
-                // Sets the fill attribute of the circle to red (#f00)
-                circle.attr("fill", "#f00");
-                // Sets the stroke attribute of the circle to white
-                circle.attr("stroke", "#fff");
-            }
-
-            function add_line(paper,x1,y1,x2,y2){
-                x1 = x1+(width/2.0);
-                y1 = y1+(height/2.0);
-                x2 = x2+(width/2.0);
-                y2 = y2+(height/2.0);
-                paper.path("M " + String(x1) + " " + String(y1) + " L " + String(x2) + " " + String(y2));
-            }
-
-            $(function(){
-                var primal = Raphael("dual", width, height);
-                var dual = Raphael("primal", width, height);
-                for(var i = 0; i<10; i++){
-                    var x = Math.floor((Math.random()*width)+1)-(width/2.0);
-                    var y = Math.floor((Math.random()*height)+1)-(height/2.0);
-                    add_circle(primal,x,y);
-                    var line = dualize_point(x,y,"Geometric");
-                    add_line(dual,line['x1'],line['y1'],500*line['x2'],500*line['y2']);
-                }
-            });
         </script>
     </head>
     <body>

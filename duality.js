@@ -14,7 +14,3 @@ function dualize_point(x, y, type)
     else
         return {'x1' : 0, 'y1' : y, 'x2' : 1, 'y2' : x}
 }
-
-
-
-
