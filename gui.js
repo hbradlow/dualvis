@@ -5,6 +5,7 @@ var mag_factor = 500;
 var offset_x = 250;
 var offset_y = 250;
 var point_placement = true;
+var shift_pressed = false;
 
 function transform_x(x){
     return (x*mag_factor)+offset_x;
@@ -45,6 +46,10 @@ function Point(x,y,primal,dual,color){
         },function(){
             this.ox = this.attr("cx");
             this.oy = this.attr("cy");
+            if(shift_pressed){
+                p.circle.remove();
+                p.line.remove();
+            }
         }
     );
 
@@ -81,11 +86,18 @@ $(function(){
         point_placement = true;
     });
     $("#primal").mouseup(function(e){
-        if(point_placement){
+        if(point_placement && !shift_pressed){
             var x = inv_transform_x(e.offsetX);
             var y = inv_transform_y(e.offsetY);
             new Point(x,y,primal,dual,"#000");
         }
+    });
+    $("body").keydown(function(e){
+        if(e.shiftKey)
+            shift_pressed = true;
+    });
+    $("body").keyup(function(e){
+        shift_pressed = false;
     });
 
     new Point(.2,.2,primal,dual,"#f00");
