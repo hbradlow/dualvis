@@ -2,28 +2,46 @@
     <head>
         <style>
             #primal{
-                width:300px;
-                height:300px;
-                background:blue;
+                width:500px;
+                height:500px;
+                border:1px solid black;
+                float:left;
             }
             #dual{
-                width:300px;
-                height:300px;
-                background:red;
+                width:500px;
+                height:500px;
+                border:1px solid black;
+                float:left;
             }
         </style>
         <script src="raphael-min.js"></script>
         <script src="duality.js"></script>
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
         <script type="text/javascript">
-            $(function(){
-                var paper = Raphael(10, 50, 320, 200);
+            var radius = 3;
+            var height = 500;
+            var width = 500;
+            function add_circle(paper,x,y){
                 // Creates circle at x = 50, y = 40, with radius 10
-                var circle = paper.circle(50, 40, 10);
+                var circle = paper.circle(x, y, radius);
                 // Sets the fill attribute of the circle to red (#f00)
                 circle.attr("fill", "#f00");
                 // Sets the stroke attribute of the circle to white
                 circle.attr("stroke", "#fff");
+            }
+
+            function draw_line(paper,x1,y1,x2,y2){
+                paper.path("M " + String(x1) + " " + String(y1) + " L " + String(x2) + " " + String(y2));
+            }
+
+            $(function(){
+                var primal = Raphael("primal", width, height);
+                var dual = Raphael("dual", width, height);
+                for(var i = 0; i<10; i++){
+                    var x = Math.floor((Math.random()*width)+1);
+                    var y = Math.floor((Math.random()*height)+1);
+                    add_circle(primal,x,y);
+                }
             });
         </script>
     </head>
