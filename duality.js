@@ -9,8 +9,8 @@ function dualize_point(x, y, type)
 {
     if (type == "Geometric")
     {
-        return {'x1' : 0, 'y1' : y, 'x2' : 1, 'y2' : x}
+        return {'x1' : -1, 'y1' : -x-y, 'x2' : 1, 'y2' : x-y}
     }
     else
-        return {'x1' : 0, 'y1' : y, 'x2' : 1, 'y2' : x}
+        return {'x1' : -1, 'y1' : -x-y, 'x2' : 1, 'y2' : x-y}
 }
