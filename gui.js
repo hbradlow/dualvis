@@ -113,6 +113,16 @@ $(function(){
         return line;
     }
 
+    $("#dual").mousedown(function(e){
+        point_placement = true;
+    });
+    $("#dual").mouseup(function(e){
+        if(point_placement && !shift_pressed){
+            var x = inv_transform_x(e.offsetX);
+            var y = inv_transform_y(e.offsetY);
+            new Point(x,y,dual,primal,"#000");
+        }
+    });
     $("#primal").mousedown(function(e){
         point_placement = true;
     });
