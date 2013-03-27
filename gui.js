@@ -1,84 +1,91 @@
-var radius = 10;
-var height = 500;
-var width = 500;
-var mag_factor = 500;
-var offset_x = 250;
-var offset_y = 250;
-var point_placement = true;
-var shift_pressed = false;
-
-function transform_x(x){
-    return (x*mag_factor)+offset_x;
-}
-function transform_y(y){
-    return (-(y*mag_factor))+offset_y;
-}
-function inv_transform_x(x){
-    return (x-offset_x)/mag_factor;
-}
-function inv_transform_y(y){
-    return -(y-offset_y)/mag_factor;
-}
-
-function Point(x,y,primal,dual,color){
-    var p = this;
-    this.color = color;
-    this.x = transform_x(x);
-    this.y = transform_y(y);
-    this.get_x = function(){
-        return inv_transform_x(this.x);
-    };
-    this.get_y = function(){
-        return inv_transform_y(this.y);
-    };
-    this.primal = primal;
-    this.dual = dual;
-
-    this.circle = this.primal.circle(this.x,this.y,radius);
-
-    this.circle.drag(function(dx,dy){
-            p.x = this.ox + dx;
-            p.y = this.oy + dy;
-            this.attr({cx: p.x, cy: p.y});
-            p.line.remove();
-            p.update_dual();
-            point_placement = false;
-        },function(){
-            this.ox = this.attr("cx");
-            this.oy = this.attr("cy");
-            if(shift_pressed){
-                p.circle.remove();
-                p.line.remove();
-            }
-        }
-    );
-
-    // Sets the fill attribute of the circle to red (#f00)
-    this.circle.attr("fill",color); 
-    // Sets the stroke attribute of the circle to white
-    this.circle.attr("stroke", "#fff");
-
-    this.update_dual = function(){
-        p.dual_point = dualize_point(p.get_x(),p.get_y(),"Geometric");
-        p.line = p.dual.path("M " + String(transform_x(p.dual_point['x1'])) + " " + String(transform_y(p.dual_point['y1'])) + " L " + String(transform_x(p.dual_point['x2'])) + " " + String(transform_y(p.dual_point['y2'])));
-        p.line.attr("stroke",p.color);
-    };
-
-    this.update_dual();
-
-    return this;
-}
-
-function add_line(paper,x1,y1,x2,y2){
-    x1 = transform_x(x1);
-    y1 = transform_y(y1);
-    x2 = transform_x(x2);
-    y2 = transform_y(y2);
-
-    var line = paper.path("M " + String(x1) + " " + String(y1) + " L " + String(x2) + " " + String(y2));
-}
-
 $(function(){
+
+    var radius = 10;
+    var height = 500;
+    var width = $("#primal").width();
+    var mag_factor = width;
+    var offset_x = width/2.0;
+    var offset_y = height/2.0;
+    var point_placement = true;
+    var shift_pressed = false;
+
+    function resize(){
+        mag_factor = width;
+        offset_x = width/2.0;
+        offset_y = height/2.0;
+    }
+    function transform_x(x){
+        return (x*mag_factor)+offset_x;
+    }
+    function transform_y(y){
+        return (-(y*mag_factor))+offset_y;
+    }
+    function inv_transform_x(x){
+        return (x-offset_x)/mag_factor;
+    }
+    function inv_transform_y(y){
+        return -(y-offset_y)/mag_factor;
+    }
+
+    function Point(x,y,primal,dual,color){
+        var p = this;
+        this.color = color;
+        this.x = x;
+        this.y = y;
+        this.get_x = function(){
+            return p.x;
+        };
+        this.get_y = function(){
+            return p.y;
+        };
+        this.primal = primal;
+        this.dual = dual;
+        this.resize = function(){
+            this.circle.attr({cx: transform_x(this.x), cy: transform_y(this.y)});
+        };
+
+        this.circle = this.primal.circle(transform_x(this.x),transform_y(this.y),radius);
+        this.circle.attr("fill",this.color); 
+        this.circle.attr("stroke", "#fff");
+
+        this.circle.drag(function(dx,dy){
+                var x = this.ox + dx;
+                var y = this.oy + dy;
+                p.x = inv_transform_x(x);
+                p.y = inv_transform_y(y);
+                this.attr({cx: x, cy: y});
+                p.line.remove();
+                p.update_dual();
+                point_placement = false;
+            },function(){
+                this.ox = this.attr("cx");
+                this.oy = this.attr("cy");
+                if(shift_pressed){
+                    p.circle.remove();
+                    p.line.remove();
+                }
+            }
+        );
+
+
+        this.update_dual = function(){
+            p.dual_point = dualize_point(p.get_x(),p.get_y(),"Geometric");
+            p.line = p.dual.path("M " + String(transform_x(p.dual_point['x1'])) + " " + String(transform_y(p.dual_point['y1'])) + " L " + String(transform_x(p.dual_point['x2'])) + " " + String(transform_y(p.dual_point['y2'])));
+            p.line.attr("stroke",p.color);
+        };
+
+        this.update_dual();
+    }
+
+    function add_line(paper,x1,y1,x2,y2){
+        x1 = transform_x(x1);
+        y1 = transform_y(y1);
+        x2 = transform_x(x2);
+        y2 = transform_y(y2);
+
+        var line = paper.path("M " + String(x1) + " " + String(y1) + " L " + String(x2) + " " + String(y2));
+    }
+
     var primal = Raphael("primal", width, height);
     var dual = Raphael("dual", width, height);
 
@@ -100,12 +107,21 @@ $(function(){
         shift_pressed = false;
     });
 
-    new Point(.2,.2,primal,dual,"#f00");
-    new Point(.3,.3,primal,dual,"#f00");
-    new Point(.4,.4,primal,dual,"#f00");
-    new Point(.2,-.2,primal,dual,"#00f");
-    new Point(.3,-.3,primal,dual,"#00f");
-    new Point(.4,-.4,primal,dual,"#00f");
+    var points = [
+    new Point(.2,.2,primal,dual,"#f00"),
+    new Point(.3,.3,primal,dual,"#f00"),
+    new Point(.4,.4,primal,dual,"#f00"),
+    new Point(.2,-.2,primal,dual,"#00f"),
+    new Point(.3,-.3,primal,dual,"#00f"),
+    new Point(.4,-.4,primal,dual,"#00f")];
+
+    $(window).resize(function () { 
+        width = $("#primal").width();
+        resize();
+        for(var i = 0; i<points.length; i++){
+            points[i].resize();
+        }
+    });
 
     var prev_x = false;
     var prev_y = false;
