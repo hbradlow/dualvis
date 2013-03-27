@@ -82,8 +82,8 @@ $(function(){
     });
     $("#primal").mouseup(function(e){
         if(point_placement){
-            var x = e.offsetX/mag_factor;
-            var y = e.offsetY/mag_factor;
+            var x = inv_transform_x(e.offsetX);
+            var y = inv_transform_y(e.offsetY);
             new Point(x,y,primal,dual,"#000");
         }
     });
