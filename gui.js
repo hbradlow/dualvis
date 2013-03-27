@@ -1,9 +1,9 @@
-var radius = 10;
-var height = 500;
-var width = 500;
-var mag_factor = 500;
-var offset_x = 250;
-var offset_y = 250;
+var radius = 7;
+var height = 300;
+var width = 300;
+var mag_factor = 300;
+var offset_x = 150;
+var offset_y = 150;
 var point_placement = true;
 var shift_pressed = false;
 

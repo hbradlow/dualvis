@@ -2,29 +2,38 @@
     <head>
         <style>
             #primal{
-                width:500px;
-                height:500px;
-                border:1px solid black;
+                width:300px;
+                height:300px;
                 float:left;
             }
             #dual{
-                width:500px;
-                height:500px;
-                border:1px solid black;
-                float:left;
+                width:300px;
+                height:300px;
+                float:right;
             }
+            body {
+                    padding-top: 20px;
+                    padding-bottom: 40px;
+                  }
         </style>
 
         <script src="jquery.min.js"></script>
         <script src="raphael-min.js"></script>
         <script src="duality.js"></script>
         <script src="gui.js"></script>
+        <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
     </head>
     <body>
-        <h1>Vidualize Dualities</h1>
-        <div id="primal">
+    <div class="container">
+        <div class="hero-unit">
+        <h1>Visualize Dualities</h1>
+        <p>Click to add a point, click and drag to add a line. Hold down shift to delete.</p>
         </div>
-        <div id="dual">
+        <div id="primal" class="hero-unit">
         </div>
+        <div id="dual" class = "hero-unit">
+        </div>
+        <script src="js/bootstrap.min.js"></script>
+    </div>
     </body>
 </html>
