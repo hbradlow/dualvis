@@ -1,18 +1,42 @@
 $(function(){
 
     var radius = 10;
-    var height = 500;
+    var height = $("#primal").height();
     var width = $("#primal").width();
     var mag_factor = width;
     var offset_x = width/2.0;
     var offset_y = height/2.0;
     var point_placement = true;
     var shift_pressed = false;
+    var primal = Raphael("primal", width, height);
+    var dual = Raphael("dual", width, height);
+
+    var lines = [];
+    function draw_parabola(){
+        for(var i = 0; i<lines.length; i++)
+        {
+            lines[i].remove();
+        }
+        lines = [];
+        var prev_x = false;
+        var prev_y = false;
+        for(var x = -2.0; x<2.0; x+=.05){
+            var y = x*x/2.0;
+            if(prev_x && prev_y){
+                lines.push(add_line(dual,prev_x,prev_y,x,y));
+                lines.push(add_line(primal,prev_x,prev_y,x,y));
+            }
+            prev_x = x;
+            prev_y = y;
+        }
+    }
 
     function resize(){
         mag_factor = width;
         offset_x = width/2.0;
         offset_y = height/2.0;
+        primal.setSize(width,height);
+        dual.setSize(width,height);
     }
     function transform_x(x){
         return (x*mag_factor)+offset_x;
@@ -42,6 +66,8 @@ $(function(){
         this.dual = dual;
         this.resize = function(){
             this.circle.attr({cx: transform_x(this.x), cy: transform_y(this.y)});
+            p.line.remove();
+            p.update_dual();
         };
 
         this.circle = this.primal.circle(transform_x(this.x),transform_y(this.y),radius);
@@ -84,10 +110,8 @@ $(function(){
         y2 = transform_y(y2);
 
         var line = paper.path("M " + String(x1) + " " + String(y1) + " L " + String(x2) + " " + String(y2));
+        return line;
     }
-
-    var primal = Raphael("primal", width, height);
-    var dual = Raphael("dual", width, height);
 
     $("#primal").mousedown(function(e){
         point_placement = true;
@@ -108,30 +132,23 @@ $(function(){
     });
 
     var points = [
-    new Point(.2,.2,primal,dual,"#f00"),
-    new Point(.3,.3,primal,dual,"#f00"),
-    new Point(.4,.4,primal,dual,"#f00"),
-    new Point(.2,-.2,primal,dual,"#00f"),
-    new Point(.3,-.3,primal,dual,"#00f"),
-    new Point(.4,-.4,primal,dual,"#00f")];
+        new Point(.2,.2,primal,dual,"#f00"),
+        new Point(.3,.3,primal,dual,"#f00"),
+        new Point(.4,.4,primal,dual,"#f00"),
+        new Point(.2,-.2,primal,dual,"#00f"),
+        new Point(.3,-.3,primal,dual,"#00f"),
+        new Point(.4,-.4,primal,dual,"#00f")
+    ];
 
     $(window).resize(function () { 
         width = $("#primal").width();
+        height = $("#primal").height();
         resize();
         for(var i = 0; i<points.length; i++){
             points[i].resize();
         }
+        draw_parabola();
     });
 
-    var prev_x = false;
-    var prev_y = false;
-    for(var x = -2.0; x<2.0; x+=.05){
-        var y = x*x/2.0;
-        if(prev_x && prev_y){
-            add_line(dual,prev_x,prev_y,x,y);
-            add_line(primal,prev_x,prev_y,x,y);
-        }
-        prev_x = x;
-        prev_y = y;
-    }
+    draw_parabola();
 });
