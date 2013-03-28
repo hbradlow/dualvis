@@ -40,6 +40,19 @@ $(function(){
             prev_x = x;
             prev_y = y;
         }
+        draw_axis();
+    }
+    function draw_axis()
+    {
+        lines.push(add_line(dual,0,0,1,0));
+        lines.push(add_line(dual,0,0,0,1));
+        lines.push(add_line(dual,0,0,-1,0));
+        lines.push(add_line(dual,0,0,0,-1));
+
+        lines.push(add_line(primal,0,0,1,0));
+        lines.push(add_line(primal,0,0,0,1));
+        lines.push(add_line(primal,0,0,-1,0));
+        lines.push(add_line(primal,0,0,0,-1));
     }
 
     function resize(){
@@ -88,9 +101,36 @@ $(function(){
         this.circle.drag(function(dx,dy){
                 var x = this.ox + dx;
                 var y = this.oy + dy;
-                p.x = inv_transform_x(x);
-                p.y = inv_transform_y(y);
-                this.attr({cx: x, cy: y});
+                if (x - radius > 0 && x + radius < width)
+                {
+                    p.x = inv_transform_x(x);
+                    this.attr({cx: x});
+                }
+                else if (x - radius <= 0)
+                {
+                    p.x = inv_transform_x(radius);
+                    this.attr({cx: radius});
+                }
+                else
+                {
+                    p.x = inv_transform_x(width-radius);
+                    this.attr({cx: width-radius});
+                }
+                if (y - radius > 0 && y + radius < height)
+                {
+                    p.y = inv_transform_y(y);
+                    this.attr({cy: y});
+                }
+                else if (y - radius <= 0)
+                {
+                    p.y = inv_transform_y(radius);
+                    this.attr({cy: radius});
+                }
+                else
+                {
+                    p.y = inv_transform_y(height-radius);
+                    this.attr({cy: height-radius});
+                }
                 p.line.remove();
                 p.update_dual();
                 point_placement = false;
