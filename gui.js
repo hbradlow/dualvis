@@ -11,6 +11,16 @@ $(function(){
     var primal = Raphael("primal", width, height);
     var dual = Raphael("dual", width, height);
 
+    var points = [
+        new Point(0,0,primal,dual,"#f00"),
+        new Point(-.3,0,primal,dual,"#f00"),
+        new Point(.3,0,primal,dual,"#f00"),
+        new Point(0,0,dual,primal,"#00f"),
+        new Point(.3,.045,dual,primal,"#00f"),
+        new Point(-.3,.045,dual,primal,"#00f"),
+    ];
+
+
     var lines = [];
     function draw_parabola(){
         for(var i = 0; i<lines.length; i++)
@@ -168,15 +178,6 @@ $(function(){
     $("body").keyup(function(e){
         shift_pressed = false;
     });
-
-    var points = [
-        new Point(.2,.2,primal,dual,"#f00"),
-        new Point(.3,.3,primal,dual,"#f00"),
-        new Point(.4,.4,primal,dual,"#f00"),
-        new Point(.2,-.2,primal,dual,"#00f"),
-        new Point(.3,-.3,primal,dual,"#00f"),
-        new Point(.4,-.4,primal,dual,"#00f")
-    ];
 
     $(window).resize(function () { 
         width = $("#primal").width();
