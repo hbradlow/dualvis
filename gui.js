@@ -102,7 +102,34 @@ $(function(){
 
         this.update_dual();
     }
-
+    function getRandomColor() {
+        // creating a random number between 0 and 255
+        var r = Math.floor(Math.random()*256);
+        var g = Math.floor(Math.random()*256);
+        var b = Math.floor(Math.random()*256);
+         
+        // going from decimal to hex
+        var hexR = r.toString(16);
+        var hexG = g.toString(16);
+        var hexB = b.toString(16);
+         
+        // making sure single character values are prepended with a "0"
+        if (hexR.length == 1) {
+        hexR = "0" + hexR;
+        }
+         
+        if (hexG.length == 1) {
+        hexG = "0" + hexG;
+        }
+         
+        if (hexB.length == 1) {
+        hexB = "0" + hexB;
+        }
+         
+        // creating the hex value by concatenatening the string values
+        var hexColor = "#" + hexR + hexG + hexB;
+        return hexColor.toUpperCase();
+    }
     function add_line(paper,x1,y1,x2,y2){
         x1 = transform_x(x1);
         y1 = transform_y(y1);
@@ -112,7 +139,6 @@ $(function(){
         var line = paper.path("M " + String(x1) + " " + String(y1) + " L " + String(x2) + " " + String(y2));
         return line;
     }
-
     $("#dual").mousedown(function(e){
         point_placement = true;
     });
@@ -120,7 +146,7 @@ $(function(){
         if(point_placement && !shift_pressed){
             var x = inv_transform_x(e.offsetX);
             var y = inv_transform_y(e.offsetY);
-            new Point(x,y,dual,primal,"#000");
+            new Point(x,y,dual,primal,getRandomColor());
         }
     });
     $("#primal").mousedown(function(e){
@@ -130,7 +156,7 @@ $(function(){
         if(point_placement && !shift_pressed){
             var x = inv_transform_x(e.offsetX);
             var y = inv_transform_y(e.offsetY);
-            new Point(x,y,primal,dual,"#000");
+            new Point(x,y,primal,dual,getRandomColor());
         }
     });
     $("body").keydown(function(e){
