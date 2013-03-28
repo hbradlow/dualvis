@@ -1,6 +1,6 @@
 $(function(){
 
-    var radius = 10;
+    var radius = 8;
     var height = $("#primal").height();
     var width = $("#primal").width();
     var mag_factor = width;
@@ -20,9 +20,10 @@ $(function(){
         lines = [];
         var prev_x = false;
         var prev_y = false;
+        var draw = true;
         for(var x = -2.0; x<2.0; x+=.05){
             var y = x*x/2.0;
-            if(prev_x && prev_y){
+            if(prev_x && prev_y && draw){
                 lines.push(add_line(dual,prev_x,prev_y,x,y));
                 lines.push(add_line(primal,prev_x,prev_y,x,y));
             }
@@ -98,6 +99,7 @@ $(function(){
             p.dual_point = dualize_point(p.get_x(),p.get_y(),"Geometric");
             p.line = p.dual.path("M " + String(transform_x(p.dual_point['x1'])) + " " + String(transform_y(p.dual_point['y1'])) + " L " + String(transform_x(p.dual_point['x2'])) + " " + String(transform_y(p.dual_point['y2'])));
             p.line.attr("stroke",p.color);
+            p.line.attr("stroke-width", "3");
         };
 
         this.update_dual();
