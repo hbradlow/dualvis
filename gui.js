@@ -8,6 +8,7 @@ $(function(){
     var offset_y = height/2.0;
     var point_placement = true;
     var shift_pressed = false;
+
     var primal = Raphael("primal", width, height);
     var dual = Raphael("dual", width, height);
 
@@ -40,7 +41,7 @@ $(function(){
             prev_x = x;
             prev_y = y;
         }
-        draw_axis();
+        //draw_axis();
     }
     function draw_axis()
     {
@@ -99,6 +100,7 @@ $(function(){
         this.circle.attr("stroke", "#fff");
 
         this.circle.drag(function(dx,dy){
+                this.toFront();
                 var x = this.ox + dx;
                 var y = this.oy + dy;
                 if (x - radius > 0 && x + radius < width)
@@ -150,6 +152,7 @@ $(function(){
             p.line = p.dual.path("M " + String(transform_x(p.dual_point['x1'])) + " " + String(transform_y(p.dual_point['y1'])) + " L " + String(transform_x(p.dual_point['x2'])) + " " + String(transform_y(p.dual_point['y2'])));
             p.line.attr("stroke",p.color);
             p.line.attr("stroke-width", "3");
+            p.line.toBack();
         };
 
         this.update_dual();
@@ -189,6 +192,7 @@ $(function(){
         y2 = transform_y(y2);
 
         var line = paper.path("M " + String(x1) + " " + String(y1) + " L " + String(x2) + " " + String(y2));
+        line.toBack();
         return line;
     }
     $("#dual").mousedown(function(e){
