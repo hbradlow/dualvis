@@ -41,19 +41,17 @@ $(function(){
             prev_x = x;
             prev_y = y;
         }
-        //draw_axis();
+        draw_axis();
     }
     function draw_axis()
     {
-        lines.push(add_line(dual,0,0,1,0));
-        lines.push(add_line(dual,0,0,0,1));
-        lines.push(add_line(dual,0,0,-1,0));
-        lines.push(add_line(dual,0,0,0,-1));
+        var color = "#AAA";
+        var dash = "--";
+        lines.push(add_line(dual,-1,0,1,0).attr("stroke", color).attr({'stroke-dasharray': dash}));
+        lines.push(add_line(dual,0,-1,0,1).attr("stroke", color).attr({'stroke-dasharray': dash}));
 
-        lines.push(add_line(primal,0,0,1,0));
-        lines.push(add_line(primal,0,0,0,1));
-        lines.push(add_line(primal,0,0,-1,0));
-        lines.push(add_line(primal,0,0,0,-1));
+        lines.push(add_line(primal,-1,0,1,0).attr("stroke", color).attr({'stroke-dasharray': dash}));
+        lines.push(add_line(primal,0,-1,0,1).attr("stroke", color).attr({'stroke-dasharray': dash}));
     }
 
     function resize(){
