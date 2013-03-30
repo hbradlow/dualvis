@@ -200,7 +200,7 @@ $(function(){
         if(point_placement && !shift_pressed){
             var x = inv_transform_x(e.offsetX);
             var y = inv_transform_y(e.offsetY);
-            new Point(x,y,dual,primal,getRandomColor());
+            points.push(new Point(x,y,dual,primal,getRandomColor()));
         }
     });
     $("#primal").mousedown(function(e){
@@ -210,7 +210,7 @@ $(function(){
         if(point_placement && !shift_pressed){
             var x = inv_transform_x(e.offsetX);
             var y = inv_transform_y(e.offsetY);
-            new Point(x,y,primal,dual,getRandomColor());
+            points.push(new Point(x,y,primal,dual,getRandomColor()));
         }
     });
     $("body").keydown(function(e){
