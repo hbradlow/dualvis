@@ -198,8 +198,9 @@ $(function(){
     });
     $("#dual").mouseup(function(e){
         if(point_placement && !shift_pressed){
-            var x = inv_transform_x(e.offsetX);
-            var y = inv_transform_y(e.offsetY);
+            console.log(e);
+            var x = inv_transform_x(e.pageX-$("#dual").offset().left);
+            var y = inv_transform_y(e.pageY-$("#dual").offset().top);
             points.push(new Point(x,y,dual,primal,getRandomColor()));
         }
     });
@@ -208,8 +209,8 @@ $(function(){
     });
     $("#primal").mouseup(function(e){
         if(point_placement && !shift_pressed){
-            var x = inv_transform_x(e.offsetX);
-            var y = inv_transform_y(e.offsetY);
+            var x = inv_transform_x(e.pageX-$("#primal").offset().left);
+            var y = inv_transform_y(e.pageY-$("#primal").offset().top);
             points.push(new Point(x,y,primal,dual,getRandomColor()));
         }
     });
