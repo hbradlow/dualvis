@@ -8,9 +8,28 @@ $(function(){
     var offset_y = height/2.0;
     var point_placement = true;
     var shift_pressed = false;
+    var x_scale = 8;
 
     var primal = Raphael("primal", width, height);
     var dual = Raphael("dual", width, height);
+
+    function dualize_line(m, b, type)
+    {
+        if (type == "Geometric")
+            return {'x' : m,  'y' : -b};
+        else
+            return {'x' : m,  'y' : -b};
+    }
+    function dualize_point(x, y, type)
+    {
+        x = x*x_scale;
+        if (type == "Geometric")
+        {
+            return {'x1' : -1, 'y1' : -x-y, 'x2' : 1, 'y2' : x-y}
+        }
+        else
+            return {'x1' : -1, 'y1' : -x-y, 'x2' : 1, 'y2' : x-y}
+    }
 
     var href = location.href;
     var href_untouched = href;
@@ -23,7 +42,6 @@ $(function(){
         for(i in ps){
             var p = ps[i].split(",");
             if(p.length==4){
-                console.log(p);
                 var x = parseFloat(p[0].slice(p[0].indexOf("=")+1));
                 var y = parseFloat(p[1].slice(p[1].indexOf("=")+1));
                 var c = p[2].slice(p[2].indexOf("=")+1);
@@ -42,8 +60,8 @@ $(function(){
             new Point(-.3,0,primal,dual,"#f00"),
             new Point(.3,0,primal,dual,"#f00"),
             new Point(0,0,dual,primal,"#00f"),
-            new Point(.3,.045,dual,primal,"#00f"),
-            new Point(-.3,.045,dual,primal,"#00f"),
+            new Point(.3,.09,dual,primal,"#00f"),
+            new Point(-.3,.09,dual,primal,"#00f"),
         ];
         update_href();
     }
@@ -51,9 +69,8 @@ $(function(){
         var s = "";
         for(i in ps){
             var p = ps[i];
-            console.log(p);
-            s += "x=" + p.x + ",";
-            s += "y=" + p.y + ",";
+            s += "x=" + (""+p.x).slice(0,7) + ",";
+            s += "y=" + (""+p.y).slice(0,7) + ",";
             s += "c=" + p.color.replace("#","") + ",";
             if(p.dual == dual){
                 s += "d=0;"
@@ -66,6 +83,7 @@ $(function(){
     }
     function update_href(){
         location.href = href_untouched+"#"+get_href_list(points);
+        $("#link").val(location.href);
     }
 
     var lines = [];
@@ -78,8 +96,8 @@ $(function(){
         var prev_x = false;
         var prev_y = false;
         var draw = true;
-        for(var x = -2.0; x<2.0; x+=.05){
-            var y = x*x/2.0;
+        for(var x = -2.0; x<2.0; x+=.02){
+            var y = x_scale*x*x/2.0;
             if(prev_x && prev_y && draw){
                 lines.push(add_line(dual,prev_x,prev_y,x,y));
                 lines.push(add_line(primal,prev_x,prev_y,x,y));
@@ -185,7 +203,13 @@ $(function(){
                 this.oy = this.attr("cy");
                 if(shift_pressed){
                     p.circle.remove();
+
+                    //remove the point from the points list
+                    i = points.indexOf(p);
+                    points = points.slice(0,i).concat(points.slice(i+1));
+
                     p.line.remove();
+                    update_href();
                 }
             }
         );
@@ -246,7 +270,6 @@ $(function(){
     });
     $("#dual").mouseup(function(e){
         if(point_placement && !shift_pressed){
-            console.log(e);
             var x = inv_transform_x(e.pageX-$("#dual").offset().left);
             var y = inv_transform_y(e.pageY-$("#dual").offset().top);
             points.push(new Point(x,y,dual,primal,getRandomColor()));
@@ -268,9 +291,11 @@ $(function(){
     $("body").keydown(function(e){
         if(e.shiftKey)
             shift_pressed = true;
+        update_href();
     });
     $("body").keyup(function(e){
         shift_pressed = false;
+        update_href();
     });
 
     $(window).resize(function () { 
