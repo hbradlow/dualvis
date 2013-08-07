@@ -12,15 +12,61 @@ $(function(){
     var primal = Raphael("primal", width, height);
     var dual = Raphael("dual", width, height);
 
-    var points = [
-        new Point(0,0,primal,dual,"#f00"),
-        new Point(-.3,0,primal,dual,"#f00"),
-        new Point(.3,0,primal,dual,"#f00"),
-        new Point(0,0,dual,primal,"#00f"),
-        new Point(.3,.045,dual,primal,"#00f"),
-        new Point(-.3,.045,dual,primal,"#00f"),
-    ];
-
+    var href = location.href;
+    var href_untouched = href;
+    var index = href.indexOf("#");
+    var points = [];
+    if(index!=-1){
+        var params = href.slice(index+1);
+        href_untouched = href_untouched.slice(0,index);
+        ps = params.split(";");
+        for(i in ps){
+            var p = ps[i].split(",");
+            if(p.length==4){
+                console.log(p);
+                var x = parseFloat(p[0].slice(p[0].indexOf("=")+1));
+                var y = parseFloat(p[1].slice(p[1].indexOf("=")+1));
+                var c = p[2].slice(p[2].indexOf("=")+1);
+                var d = p[3].slice(p[3].indexOf("=")+1);
+                if(d=="0")
+                    points = points.concat(new Point(x,y,primal,dual,"#"+c));
+                if(d=="1")
+                    points = points.concat(new Point(x,y,dual,primal,"#"+c));
+            }
+        }
+        update_href();
+    }
+    else{
+        var points = [
+            new Point(0,0,primal,dual,"#f00"),
+            new Point(-.3,0,primal,dual,"#f00"),
+            new Point(.3,0,primal,dual,"#f00"),
+            new Point(0,0,dual,primal,"#00f"),
+            new Point(.3,.045,dual,primal,"#00f"),
+            new Point(-.3,.045,dual,primal,"#00f"),
+        ];
+        update_href();
+    }
+    function get_href_list(ps){
+        var s = "";
+        for(i in ps){
+            var p = ps[i];
+            console.log(p);
+            s += "x=" + p.x + ",";
+            s += "y=" + p.y + ",";
+            s += "c=" + p.color.replace("#","") + ",";
+            if(p.dual == dual){
+                s += "d=0;"
+            }
+            else{
+                s += "d=1;"
+            }
+        }
+        return s;
+    }
+    function update_href(){
+        location.href = href_untouched+"#"+get_href_list(points);
+    }
 
     var lines = [];
     function draw_parabola(){
@@ -151,6 +197,7 @@ $(function(){
             p.line.attr("stroke",p.color);
             p.line.attr("stroke-width", "3");
             p.line.toBack();
+
         };
 
         this.update_dual();
@@ -195,6 +242,7 @@ $(function(){
     }
     $("#dual").mousedown(function(e){
         point_placement = true;
+        update_href();
     });
     $("#dual").mouseup(function(e){
         if(point_placement && !shift_pressed){
@@ -203,9 +251,11 @@ $(function(){
             var y = inv_transform_y(e.pageY-$("#dual").offset().top);
             points.push(new Point(x,y,dual,primal,getRandomColor()));
         }
+        update_href();
     });
     $("#primal").mousedown(function(e){
         point_placement = true;
+        update_href();
     });
     $("#primal").mouseup(function(e){
         if(point_placement && !shift_pressed){
@@ -213,6 +263,7 @@ $(function(){
             var y = inv_transform_y(e.pageY-$("#primal").offset().top);
             points.push(new Point(x,y,primal,dual,getRandomColor()));
         }
+        update_href();
     });
     $("body").keydown(function(e){
         if(e.shiftKey)
