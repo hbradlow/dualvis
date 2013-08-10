@@ -1,3 +1,4 @@
+var activeColor = "#f00";
 $(function(){
 
     var radius = 8;
@@ -272,7 +273,7 @@ $(function(){
         if(point_placement && !shift_pressed){
             var x = inv_transform_x(e.pageX-$("#dual").offset().left);
             var y = inv_transform_y(e.pageY-$("#dual").offset().top);
-            points.push(new Point(x,y,dual,primal,getRandomColor()));
+            points.push(new Point(x,y,dual,primal,activeColor));
         }
         update_href();
     });
@@ -284,7 +285,7 @@ $(function(){
         if(point_placement && !shift_pressed){
             var x = inv_transform_x(e.pageX-$("#primal").offset().left);
             var y = inv_transform_y(e.pageY-$("#primal").offset().top);
-            points.push(new Point(x,y,primal,dual,getRandomColor()));
+            points.push(new Point(x,y,primal,dual,activeColor));
         }
         update_href();
     });
