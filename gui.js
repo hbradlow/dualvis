@@ -58,11 +58,11 @@ $(function(){
     else{
         var points = [
             new Point(0,0,primal,dual,"#f00"),
-            new Point(-.3,0,primal,dual,"#f00"),
-            new Point(.3,0,primal,dual,"#f00"),
+            new Point(-.2,0,primal,dual,"#f00"),
+            new Point(.2,0,primal,dual,"#f00"),
             new Point(0,0,dual,primal,"#00f"),
-            new Point(.3,.09,dual,primal,"#00f"),
-            new Point(-.3,.09,dual,primal,"#00f"),
+            new Point(.2,.02*x_scale,dual,primal,"#00f"),
+            new Point(-.2,.02*x_scale,dual,primal,"#00f"),
         ];
         update_href();
     }
